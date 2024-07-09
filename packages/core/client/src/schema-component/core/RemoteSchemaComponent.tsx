@@ -61,6 +61,8 @@ const RequestSchemaComponent: React.FC<RemoteSchemaComponentProps> = (props) => 
   if (hidden) {
     return <Spin />;
   }
+
+  /** TODO: 插入布局 */
   return noForm ? (
     <SchemaComponent memoized components={components} scope={scope} schema={schemaTransform(data?.data || {})} />
   ) : (

@@ -275,9 +275,17 @@ export type APIClientOptions = AxiosInstance | (AxiosRequestConfig & ExtendedOpt
 
 export class APIClient {
   axios: AxiosInstance;
-  auth: Auth;
+  _auth: Auth;
   storage: Storage;
   storagePrefix = 'NOCOBASE_';
+
+  public get auth(): Auth {
+    return this._auth;
+  }
+
+  public set auth(v: Auth) {
+    this._auth = v;
+  }
 
   getHeaders() {
     const headers = {};

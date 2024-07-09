@@ -35,9 +35,10 @@ import {
 } from '../../../';
 import { Plugin } from '../../../application/Plugin';
 import { useAppSpin } from '../../../application/hooks/useAppSpin';
+import { useMenuTranslation } from '../../../schema-component/antd/menu/locale';
 import { Help } from '../../../user/Help';
 import { VariablesProvider } from '../../../variables';
-import { useMenuTranslation } from '../../../schema-component/antd/menu/locale';
+import WrapperLayout from './wrapper-layout';
 
 const filterByACL = (schema, options) => {
   const { allowAll, allowMenuItemIds = [] } = options;
@@ -140,9 +141,13 @@ const MenuEditor = (props) => {
       },
     },
   );
+  console.log(current?.root?.properties || {}, '---> properties');
 
   useEffect(() => {
     const properties = Object.values(current?.root?.properties || {}).shift()?.['properties'] || data?.data?.properties;
+
+    console.log(properties, '---> properties');
+
     if (sideMenuRef.current) {
       const pageType =
         properties &&
@@ -326,7 +331,7 @@ export const AdminDynamicPage = () => {
 export const InternalAdminLayout = () => {
   const result = useSystemSettings();
   const { token } = useToken();
-  const sideMenuRef = useRef<HTMLDivElement>();
+  const params = useParams<any>();
 
   const layoutHeaderCss = useMemo(() => {
     return css`
@@ -351,7 +356,7 @@ export const InternalAdminLayout = () => {
       line-height: var(--nb-header-height);
       padding: 0;
       z-index: 100;
-      background-color: ${token.colorBgHeader} !important;
+      background-color: rgba(0, 0, 0, 0.6) !important;
 
       .ant-menu {
         background-color: transparent;
@@ -371,6 +376,23 @@ export const InternalAdminLayout = () => {
     token.colorTextHeaderMenu,
   ]);
 
+  const adminSchemaUid = useAdminSchemaUid();
+  const { data, loading } = useRequest<{
+    data: any;
+  }>(
+    {
+      url: `/uiSchemas:getJsonSchema/${adminSchemaUid}`,
+    },
+    {
+      refreshDeps: [adminSchemaUid],
+      onSuccess(data) {
+        console.log(data, '----> params', params);
+      },
+    },
+  );
+
+  console.log(data, params, '-------', loading);
+
   return (
     <Layout>
       <GlobalStyleForAdminLayout />
@@ -381,48 +403,12 @@ export const InternalAdminLayout = () => {
             width: '100%',
             height: '100%',
             display: 'flex',
+            color: '#fff',
+            padding: '0 12px',
+            'justify-content': 'space-between',
           }}
         >
-          <div
-            style={{
-              position: 'relative',
-              zIndex: 1,
-              flex: '1 1 auto',
-              display: 'flex',
-              height: '100%',
-            }}
-          >
-            <div
-              className={css`
-                width: 200px;
-                display: inline-flex;
-                flex-shrink: 0;
-                color: #fff;
-                padding: 0;
-                align-items: center;
-              `}
-            >
-              <img
-                className={css`
-                  padding: 0 16px;
-                  object-fit: contain;
-                  width: 100%;
-                  height: 100%;
-                `}
-                src={result?.data?.data?.logo?.url}
-              />
-            </div>
-            <div
-              className={css`
-                flex: 1 1 auto;
-                width: 0;
-              `}
-            >
-              <SetThemeOfHeaderSubmenu>
-                <MenuEditor sideMenuRef={sideMenuRef} />
-              </SetThemeOfHeaderSubmenu>
-            </div>
-          </div>
+          <h2>Zebras</h2>
           <div
             className={css`
               position: relative;
@@ -446,15 +432,27 @@ export const InternalAdminLayout = () => {
           </div>
         </div>
       </Layout.Header>
-      <AdminSideBar sideMenuRef={sideMenuRef} />
+      <Layout.Sider
+        className={css`
+          .ant-layout-sider .ant-layout-sider-children {
+            margin-top: var(--nb-header-height);
+            height: calc(100vh - var(--nb-header-height));
+            max-height: calc(100vh - var(--nb-header-height));
+          }
+        `}
+      >
+        <div>ssss</div>
+      </Layout.Sider>
+      {/* <AdminSideBar sideMenuRef={sideMenuRef} /> */}
       <Layout.Content
         className={css`
           display: flex;
           flex-direction: column;
           position: relative;
           overflow-y: auto;
-          height: 100vh;
-          max-height: 100vh;
+          height: calc(100vh - var(--nb-header-height));
+          max-height: calc(100vh - var(--nb-header-height));
+          margin-top: var(--nb-header-height);
           > div {
             position: relative;
           }
@@ -468,17 +466,7 @@ export const InternalAdminLayout = () => {
           }
         `}
       >
-        <header
-          className={css`
-            flex-shrink: 0;
-            height: var(--nb-header-height);
-            line-height: var(--nb-header-height);
-            background: transparent;
-            pointer-events: none;
-          `}
-        ></header>
         <Outlet />
-        {/* {service.contentLoading ? render() : <Outlet />} */}
       </Layout.Content>
     </Layout>
   );
@@ -501,9 +489,16 @@ export const AdminProvider = (props) => {
 };
 
 export const AdminLayout = (props) => {
+  const layoutContentRef = useRef(null);
+
   return (
     <AdminProvider>
-      <InternalAdminLayout {...props} />
+      <Layout>
+        <WrapperLayout {...{ layoutContentRef, ...props }} />
+        <Layout.Content ref={layoutContentRef}>
+          <Outlet />
+        </Layout.Content>
+      </Layout>
     </AdminProvider>
   );
 };

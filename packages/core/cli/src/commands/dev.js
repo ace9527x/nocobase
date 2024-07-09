@@ -54,10 +54,13 @@ module.exports = (cli) => {
       let clientPort = APP_PORT;
       let serverPort;
 
+      /** 如果没有ts转换 退出进程 */
       nodeCheck();
 
+      /** 端口被占用退出进程 */
       await postCheck(opts);
 
+      /** 服务端端口默认为客户端端口 + 1 */
       if (server) {
         serverPort = APP_PORT;
       } else if (!server && !client) {
@@ -65,6 +68,23 @@ module.exports = (cli) => {
           port: 1 * clientPort + 1,
         });
       }
+
+      /**
+       * yarn dev --port 3000
+        yarn run v1.22.22
+        $ nocobase dev --port 3000
+        WAIT: TypeScript compiling...
+        [
+          'C:\\Users\\xiao\\AppData\\Roaming\\fnm\\aliases\\default\\node.exe',
+          'G:\\中南院项目\\nocobase\\my-nocobase-app\\packages\\core\\cli\\bin\\index.js',
+          'dev',
+          '--port',
+          '3000'
+        ] ---> process.argv
+       */
+      // console.log(process.argv, '---> process.argv');
+
+      // process.exit(1);
 
       if (server || !client) {
         console.log('starting server', serverPort);
