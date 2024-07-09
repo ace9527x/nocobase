@@ -52,7 +52,7 @@ const filterByACL = (schema, options) => {
   return schema;
 };
 
-export default function WrapperLayout(props) {
+export default function WrapperLayout() {
   const { render } = useAppSpin();
   const { t } = useMenuTranslation();
   const [current, setCurrent] = useState(null);
@@ -166,7 +166,6 @@ export default function WrapperLayout(props) {
     defaultSelectedUid,
     toolsBtn,
     schema,
-    layoutContentRef: props.layoutContentRef,
   };
 
   return (
