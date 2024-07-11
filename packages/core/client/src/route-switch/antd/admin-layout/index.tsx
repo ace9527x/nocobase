@@ -503,8 +503,13 @@ export const AdminProvider = (props) => {
 export const AdminLayout = (props) => {
   return (
     <AdminProvider>
-      {/* <WrapperLayout /> */}
       <InternalAdminLayout {...props} />
+      {/* <Layout>
+        <WrapperLayout />
+        <Layout.Content>
+          <Outlet />
+        </Layout.Content>
+      </Layout> */}
     </AdminProvider>
   );
 };

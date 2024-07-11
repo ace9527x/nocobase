@@ -1,10 +1,10 @@
-import { IWrapperLayoutProps, SchemaComponent, withDynamicSchemaProps } from '@nocobase/client';
+import { IWrapperLayoutProps, withDynamicSchemaProps } from '@nocobase/client';
 import { Layout } from 'antd';
 import React from 'react';
-import '../style';
+// import '../style';
 
-const LayoutTheme = (props: IWrapperLayoutProps) => {
-  const { toolsBtn, title = 'zebras', schema } = props;
+const LayoutTheme = (props: IWrapperLayoutProps & { children: any }) => {
+  const { toolsBtn, title = 'zebras', children } = props;
 
   return (
     <>
@@ -20,9 +20,7 @@ const LayoutTheme = (props: IWrapperLayoutProps) => {
           </div>
         </div>
       </Layout.Header>
-      <Layout.Sider>
-        <SchemaComponent schema={schema}></SchemaComponent>
-      </Layout.Sider>
+      <Layout.Sider width={300}>{children}</Layout.Sider>
     </>
   );
 };

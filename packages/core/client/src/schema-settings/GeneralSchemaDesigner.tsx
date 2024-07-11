@@ -83,6 +83,7 @@ export const GeneralSchemaDesigner: FC<GeneralSchemaDesignerProps> = (props: any
     draggable = true,
     showDataSource = true,
   } = { ...props, ...(fieldSchema['x-toolbar-props'] || {}) } as GeneralSchemaDesignerProps;
+
   const { dn, designable } = useDesignable();
   const field = useField();
   const { t } = useTranslation();

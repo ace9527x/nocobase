@@ -279,6 +279,7 @@ export class Designable {
       return;
     }
     const [opts, ...others] = args;
+    console.log('ddddd');
     return Promise.all(this.events[name].map((fn) => fn.bind(this)({ current: this.current, ...opts }, ...others)));
   }
 
@@ -401,6 +402,7 @@ export class Designable {
   }
 
   insertAdjacent(position: Position, schema: ISchema, options: InsertAdjacentOptions = {}) {
+    console.log(position, schema, options, '-----ssss');
     switch (position) {
       case 'beforeBegin':
         return this.insertBeforeBegin(schema, options);

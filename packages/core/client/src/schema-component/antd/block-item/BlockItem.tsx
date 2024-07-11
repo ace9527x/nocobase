@@ -10,14 +10,14 @@
 import { useFieldSchema } from '@formily/react';
 import cls from 'classnames';
 import React, { useMemo } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import { useSchemaToolbarRender } from '../../../application';
 import { withDynamicSchemaProps } from '../../../hoc/withDynamicSchemaProps';
 import { CustomCreateStylesUtils, createStyles } from '../../../style';
 import { SortableItem } from '../../common';
 import { useProps } from '../../hooks';
-import { useGetAriaLabelOfBlockItem } from './hooks/useGetAriaLabelOfBlockItem';
-import { ErrorBoundary } from 'react-error-boundary';
 import { ErrorFallback } from '../error-fallback';
-import { useSchemaToolbarRender } from '../../../application';
+import { useGetAriaLabelOfBlockItem } from './hooks/useGetAriaLabelOfBlockItem';
 
 const useStyles = createStyles(({ css, token }: CustomCreateStylesUtils) => {
   return css`
