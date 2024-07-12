@@ -24,6 +24,7 @@ export const menuSchema = {
       'x-toolbar': 'MyToolbar',
       'x-component-props': {
         mode: 'inline',
+        onSelect: '{{onSelect}}',
         style: {
           width: 260,
         },
@@ -108,11 +109,9 @@ export const SubSchema = {
   },
 };
 
-export const insertSubTemp = (fieldSchema, { name, icon, key }) => ({
+export const insertSubTemp = ({ name, icon, key }) => ({
   type: 'void',
   title: name,
-  name: `${fieldSchema['x-uid']}_${key}`,
-  'x-uid': `${fieldSchema['x-uid']}_${key}`,
   'x-decorator': 'ACLMenuItemProvider',
   'x-settings': 'blockSettings:layoutmenu',
   'x-component': 'Menu.SubMenu',
@@ -120,18 +119,26 @@ export const insertSubTemp = (fieldSchema, { name, icon, key }) => ({
     initializer: false,
     disableInitializer: true,
   },
+  'x-server-hooks': [
+    {
+      type: 'onSelfCreate',
+      method: 'bindMenuToRole',
+    },
+    {
+      type: 'onSelfSave',
+      method: 'extractTextToLocale',
+    },
+  ],
   'x-component-props': {
     icon,
     title: name,
-    key: `${fieldSchema['x-component-props']['key']}_${key}`,
+    key,
   },
 });
 
-export const insertItemTemp = (fieldSchema, { name, icon, path }) => ({
+export const insertItemTemp = ({ name, icon, path }) => ({
   type: 'void',
   title: name,
-  name: `${fieldSchema['x-uid']}_${path}`,
-  'x-uid': `${fieldSchema['x-uid']}_${path}`,
   'x-component': 'Menu.Item',
   'x-decorator': 'ACLMenuItemProvider',
   'x-settings': 'blockSettings:itemMenu',
@@ -143,5 +150,33 @@ export const insertItemTemp = (fieldSchema, { name, icon, path }) => ({
     icon,
     name,
     path,
+  },
+  'x-server-hooks': [
+    {
+      type: 'onSelfCreate',
+      method: 'bindMenuToRole',
+    },
+    {
+      type: 'onSelfSave',
+      method: 'extractTextToLocale',
+    },
+  ],
+  properties: {
+    page: {
+      type: 'void',
+      'x-component': 'Page',
+      properties: {
+        grid: {
+          version: '2.0',
+          type: 'void',
+          'x-component': 'Grid',
+          'x-initializer': 'page:addBlock',
+          'x-async': false,
+          'x-index': 1,
+        },
+      },
+      'x-async': true,
+      'x-index': 1,
+    },
   },
 });

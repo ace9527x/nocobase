@@ -402,7 +402,6 @@ export class Designable {
   }
 
   insertAdjacent(position: Position, schema: ISchema, options: InsertAdjacentOptions = {}) {
-    console.log(position, schema, options, '-----ssss');
     switch (position) {
       case 'beforeBegin':
         return this.insertBeforeBegin(schema, options);

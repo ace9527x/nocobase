@@ -1,4 +1,3 @@
-import { useFieldSchema } from '@formily/react';
 import {
   SchemaInitializerActionModal,
   SchemaInitializerItemTypeWithoutName,
@@ -27,7 +26,6 @@ export function InsertGroupInitializer() {
   const itemConfig = useSchemaInitializerItem();
   // 调用插入功能
   const { insert } = useSchemaInitializer();
-  const fieldSchema = useFieldSchema();
 
   return (
     <SchemaInitializerActionModal
@@ -36,7 +34,7 @@ export function InsertGroupInitializer() {
       buttonText={itemConfig.title}
       schema={SubSchema}
       onSubmit={(props) => {
-        insert(insertSubTemp(fieldSchema, props));
+        insert(insertSubTemp(props));
       }}
     />
   );
@@ -45,8 +43,6 @@ export function InsertGroupInitializer() {
 export function InsertPageInitializer() {
   const itemConfig = useSchemaInitializerItem();
   const { insert } = useSchemaInitializer();
-  // 调用插入功能
-  const fieldSchema = useFieldSchema();
 
   return (
     <SchemaInitializerActionModal
@@ -55,7 +51,7 @@ export function InsertPageInitializer() {
       buttonText={itemConfig.title}
       schema={ItemSchema}
       onSubmit={(props) => {
-        insert(insertItemTemp(fieldSchema, props));
+        insert(insertItemTemp(props));
       }}
     />
   );

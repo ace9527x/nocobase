@@ -38,6 +38,7 @@ import { useAppSpin } from '../../../application/hooks/useAppSpin';
 import { useMenuTranslation } from '../../../schema-component/antd/menu/locale';
 import { Help } from '../../../user/Help';
 import { VariablesProvider } from '../../../variables';
+import WrapperLayout from './wrapper-layout';
 
 const filterByACL = (schema, options) => {
   const { allowAll, allowMenuItemIds = [] } = options;
@@ -503,13 +504,13 @@ export const AdminProvider = (props) => {
 export const AdminLayout = (props) => {
   return (
     <AdminProvider>
-      <InternalAdminLayout {...props} />
-      {/* <Layout>
+      {/* <InternalAdminLayout {...props} /> */}
+      <Layout>
         <WrapperLayout />
         <Layout.Content>
           <Outlet />
         </Layout.Content>
-      </Layout> */}
+      </Layout>
     </AdminProvider>
   );
 };

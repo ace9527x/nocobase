@@ -1,5 +1,5 @@
 import '../style/layout-content';
-// import '../style/layout-header';
+import '../style/layout-header';
 
 export default function createGlobalStyle(key: string, css: string) {
   if (document.body.querySelector(`style[name="${key}"]`)) {

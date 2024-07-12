@@ -3,7 +3,6 @@ import { SchemaSettingsModalItem, useDesignable } from '@nocobase/client';
 import React from 'react';
 import { insertItemTemp, insertSubTemp, ItemSchema, setSchemaValue, SubSchema } from '../schema';
 export const InsertGroup = () => {
-  const fieldSchema = useFieldSchema();
   const { dn } = useDesignable();
 
   return (
@@ -11,7 +10,7 @@ export const InsertGroup = () => {
       title="新增分组"
       schema={SubSchema}
       onSubmit={(props) => {
-        const schema = insertSubTemp(fieldSchema, props);
+        const schema = insertSubTemp(props);
 
         dn.emit('insertAdjacent', {
           position: 'beforeEnd',
@@ -26,7 +25,6 @@ export const InsertGroup = () => {
 };
 
 export const InsertPage = () => {
-  const fieldSchema = useFieldSchema();
   const { dn } = useDesignable();
 
   return (
@@ -36,7 +34,7 @@ export const InsertPage = () => {
       onSubmit={(props) => {
         dn.emit('insertAdjacent', {
           position: 'beforeEnd',
-          schema: insertItemTemp(fieldSchema, props),
+          schema: insertItemTemp(props),
           onSuccess: (schema) => {
             dn.insertBeforeEnd(schema);
           },

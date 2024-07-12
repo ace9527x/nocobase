@@ -1,11 +1,8 @@
-import { Plugin, SchemaInitializer, SchemaSettings, SchemaToolbar } from '@nocobase/client';
+import { Plugin, SchemaInitializer, SchemaSettings } from '@nocobase/client';
 import LayoutTheme from './component/layout';
 import { InsertGroupInitializer, InsertPageInitializer, layoutMenuItemInitializer } from './initializer';
 import { editPage, InsertGroup, InsertPage } from './settings';
 import './style';
-
-import { useFieldSchema } from '@formily/react';
-import React from 'react';
 
 const addMenu = new SchemaInitializer({
   name: 'addMenu',
@@ -26,10 +23,6 @@ const addMenu = new SchemaInitializer({
   ],
 });
 
-const MyToolbar = (props) => {
-  const fieldSchema = useFieldSchema();
-  return <SchemaToolbar title="这是标题" settings={fieldSchema['x-settings']} {...props} initializer={false} />;
-};
 export class PluginLayoutThemeClient extends Plugin {
   async afterAdd() {
     // await this.app.pm.add()
@@ -39,7 +32,7 @@ export class PluginLayoutThemeClient extends Plugin {
 
   // You can get and modify the app instance here
   async load() {
-    this.app.addComponents({ LayoutTheme, MyToolbar });
+    this.app.addComponents({ LayoutTheme });
     this.app.schemaInitializerManager.addItem(
       'page:addBlock',
       layoutMenuItemInitializer.name,

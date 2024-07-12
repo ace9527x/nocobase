@@ -74,7 +74,11 @@ export default function WrapperLayout() {
     const schema = item.props.schema;
     setTitle(schema.title);
     setCurrent(schema);
-    navigate(`/admin/${schema['x-uid']}`);
+    navigate(`/admin/${schema['x-uid']}`, {
+      state: {
+        name: schema['x-uid'],
+      },
+    });
   };
 
   const { data, loading } = useRequest<{
@@ -179,9 +183,10 @@ export default function WrapperLayout() {
           }}
           schema={{
             type: 'void',
-            name: 'LayoutTheme',
+            name: 'layout',
             'x-component': 'LayoutTheme',
             'x-component-props': componentProps,
+            'x-use-component-props': 'useMenuProps',
           }}
         />
       </SchemaIdContext.Provider>
