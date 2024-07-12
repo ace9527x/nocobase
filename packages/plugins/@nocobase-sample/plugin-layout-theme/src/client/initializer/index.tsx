@@ -1,4 +1,5 @@
 import {
+  SchemaInitializer,
   SchemaInitializerActionModal,
   SchemaInitializerItemTypeWithoutName,
   useSchemaInitializer,
@@ -7,6 +8,7 @@ import {
 import React from 'react';
 import { insertItemTemp, insertSubTemp, ItemSchema, menuSchema, SubSchema } from '../schema';
 
+/** 添加菜单 items */
 export const layoutMenuItemInitializer: SchemaInitializerItemTypeWithoutName = {
   type: 'item',
   name: '菜单',
@@ -22,6 +24,7 @@ export const layoutMenuItemInitializer: SchemaInitializerItemTypeWithoutName = {
   },
 };
 
+/** 分组 items */
 export function InsertGroupInitializer() {
   const itemConfig = useSchemaInitializerItem();
   // 调用插入功能
@@ -40,6 +43,7 @@ export function InsertGroupInitializer() {
   );
 }
 
+/** 分页 items */
 export function InsertPageInitializer() {
   const itemConfig = useSchemaInitializerItem();
   const { insert } = useSchemaInitializer();
@@ -56,3 +60,22 @@ export function InsertPageInitializer() {
     />
   );
 }
+
+export const addMenu = new SchemaInitializer({
+  name: 'addMenu',
+  title: '添加菜单',
+  // 插入位置
+  insertPosition: 'beforeEnd',
+  items: [
+    {
+      name: '新增分组',
+      title: '新增分组',
+      Component: InsertGroupInitializer,
+    },
+    {
+      name: '新增页面',
+      title: '新增页面',
+      Component: InsertPageInitializer,
+    },
+  ],
+});

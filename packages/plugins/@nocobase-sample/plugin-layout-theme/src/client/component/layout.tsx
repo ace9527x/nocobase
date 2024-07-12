@@ -43,32 +43,30 @@ const LayoutTheme = (props: IWrapperLayoutProps & { children: any }) => {
           </div>
         </div>
       </Layout.Header>
-      <div>
-        <Layout.Sider width={260} ref={sideMenuRef}>
-          <SchemaComponent
-            scope={{
-              onSelect: (props) => {
-                console.log(props);
-                onSelect(props);
+      <Layout.Sider width={260} ref={sideMenuRef}>
+        <SchemaComponent
+          scope={{
+            onSelect: (props) => {
+              console.log(props);
+              onSelect(props);
+            },
+          }}
+          schema={{
+            ...schema,
+            type: 'void',
+            'x-component': 'Menu',
+            'x-initializer': 'addMenu',
+            'x-component-props': {
+              defaultSelectedUid: params.name,
+              mode: 'inline',
+              onSelect: '{{onSelect}}',
+              style: {
+                width: 260,
               },
-            }}
-            schema={{
-              ...schema,
-              type: 'void',
-              'x-component': 'Menu',
-              'x-initializer': 'addMenu',
-              'x-component-props': {
-                defaultSelectedUid: params.name,
-                mode: 'inline',
-                onSelect: '{{onSelect}}',
-                style: {
-                  width: 260,
-                },
-              },
-            }}
-          ></SchemaComponent>
-        </Layout.Sider>
-      </div>
+            },
+          }}
+        ></SchemaComponent>
+      </Layout.Sider>
     </>
   );
 };

@@ -506,7 +506,7 @@ export const AdminLayout = (props) => {
     <AdminProvider>
       {/* <InternalAdminLayout {...props} /> */}
       <Layout>
-        <WrapperLayout />
+        <WrapperLayout></WrapperLayout>
         <Layout.Content>
           <Outlet />
         </Layout.Content>
