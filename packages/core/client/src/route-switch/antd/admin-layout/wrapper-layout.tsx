@@ -146,6 +146,15 @@ export default function WrapperLayout(props) {
     }
   }, [data?.data, params.name, sideMenuRef]);
 
+  const lRef = useRef(layoutContext.layout);
+
+  useEffect(() => {
+    if (layoutContext.layout !== lRef.current) {
+      lRef.current = layoutContext.layout;
+      navigate('/');
+    }
+  }, [layoutContext.layout]);
+
   if (loading) {
     return render();
   }

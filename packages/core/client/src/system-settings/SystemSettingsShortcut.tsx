@@ -203,7 +203,7 @@ export const SystemSettingsPane = () => {
         <Button
           onClick={() => {
             layoutContext.setLayout(layout);
-            window.location.reload();
+            // window.location.reload();
           }}
         >
           更新布局
