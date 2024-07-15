@@ -64,10 +64,10 @@ const RequestSchemaComponent: React.FC<RemoteSchemaComponentProps> = (props) => 
 
   /** TODO: 插入布局 */
   return noForm ? (
-    <SchemaComponent memoized components={components} scope={scope} schema={schemaTransform(data?.data || {})} />
+    <SchemaComponent components={components} scope={scope} schema={schemaTransform(data?.data || {})} />
   ) : (
     <FormProvider form={form}>
-      <SchemaComponent memoized components={components} scope={scope} schema={schemaTransform(data?.data || {})} />
+      <SchemaComponent components={components} scope={scope} schema={schemaTransform(data?.data || {})} />
     </FormProvider>
   );
 };

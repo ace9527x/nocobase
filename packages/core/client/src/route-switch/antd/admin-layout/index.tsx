@@ -220,7 +220,6 @@ const MenuEditor = (props) => {
     <SchemaIdContext.Provider value={defaultSelectedUid}>
       <SchemaComponent
         distributed
-        memoized
         scope={{ useMenuProps, onSelect, sideMenuRef, defaultSelectedUid }}
         schema={schema}
       />
