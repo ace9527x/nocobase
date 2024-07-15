@@ -1,10 +1,28 @@
+import { SearchOutlined } from '@ant-design/icons';
 import { withDynamicSchemaProps } from '@nocobase/client';
 import type { MenuProps } from 'antd';
-import { Layout, Menu } from 'antd';
+import { Input, Layout, Menu } from 'antd';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { LayoutContextStyle, LayoutHeaderStyle } from '../style';
 import { mockMenu, transformUsmMenu } from '../utils';
+
+function findLabel(siderMenu, searchMenuKeyword) {
+  return siderMenu.filter((item) => {
+    if (item.children) {
+      const cl = findLabel(item.children, searchMenuKeyword);
+
+      if (cl.length) {
+        return cl;
+      }
+
+      return false;
+    }
+
+    return item.label.includes(searchMenuKeyword);
+  });
+}
+
 const LayoutTheme = (props) => {
   const { toolsBtn, title = 'zebras', schema, menu = mockMenu } = props;
 
@@ -12,17 +30,6 @@ const LayoutTheme = (props) => {
 
   const sideMenuRef = useRef(null);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (sideMenuRef.current) {
-      const isSettingPage = location?.pathname.includes('/settings');
-      if (isSettingPage) {
-        sideMenuRef.current.style.display = 'none';
-      } else {
-        sideMenuRef.current.style.display = 'block';
-      }
-    }
-  }, [params.name, sideMenuRef]);
 
   const siderMenu = useMemo<any>(() => transformUsmMenu(menu), [menu]);
 
@@ -41,6 +48,14 @@ const LayoutTheme = (props) => {
       setCurrent(params.name);
     }
   }, [params]);
+
+  const [searchMenuKeyword, setSearchMenuKeyword] = useState<any>('');
+
+  const _menu = useMemo(() => {
+    if (!searchMenuKeyword) return siderMenu;
+
+    return findLabel(siderMenu, searchMenuKeyword);
+  }, [searchMenuKeyword, siderMenu]);
 
   return (
     <>
@@ -66,7 +81,16 @@ const LayoutTheme = (props) => {
         </div>
       </Layout.Header>
       <Layout.Sider width={260} ref={sideMenuRef}>
-        <Menu onClick={onClick} selectedKeys={[current]} mode="inline" items={siderMenu} />
+        <Input
+          value={searchMenuKeyword}
+          addonBefore={<SearchOutlined />}
+          onChange={(e) => {
+            setSearchMenuKeyword(e.target.value);
+          }}
+          placeholder="请输入搜索菜单"
+          allowClear
+        />
+        <Menu onClick={onClick} selectedKeys={[current]} mode="inline" items={_menu} />
       </Layout.Sider>
     </>
   );
