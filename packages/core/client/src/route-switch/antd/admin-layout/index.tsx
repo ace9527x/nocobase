@@ -35,6 +35,7 @@ import {
 } from '../../../';
 import { Plugin } from '../../../application/Plugin';
 import { useAppSpin } from '../../../application/hooks/useAppSpin';
+import { LayoutProvider } from '../../../layout-provider';
 import { useMenuTranslation } from '../../../schema-component/antd/menu/locale';
 import { Help } from '../../../user/Help';
 import { VariablesProvider } from '../../../variables';
@@ -502,15 +503,19 @@ export const AdminProvider = (props) => {
 };
 
 export const AdminLayout = (props) => {
+  const [currentLayout, setCurrentLayout] = useState('LayoutTheme');
+
   return (
     <AdminProvider>
-      {/* <InternalAdminLayout {...props} /> */}
-      <Layout>
-        <WrapperLayout></WrapperLayout>
-        <Layout.Content>
-          <Outlet />
-        </Layout.Content>
-      </Layout>
+      <LayoutProvider>
+        {/* <InternalAdminLayout {...props} /> */}
+        <Layout>
+          <WrapperLayout></WrapperLayout>
+          <Layout.Content>
+            <Outlet />
+          </Layout.Content>
+        </Layout>
+      </LayoutProvider>
     </AdminProvider>
   );
 };

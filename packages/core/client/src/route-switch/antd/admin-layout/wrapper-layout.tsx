@@ -1,9 +1,10 @@
 import { ReactFC } from '@formily/react';
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { createContext, useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation, useMatch, useNavigate, useParams } from 'react-router-dom';
 import { findByUid, findMenuItem, SchemaComponent, useACLRoleContext, useDocumentTitle, useRequest } from '../../../';
 import { useAppSpin } from '../../../application/hooks/useAppSpin';
 import { useAdminSchemaUid } from '../../../hooks';
+import { useLayoutContext } from '../../../layout-provider';
 import { PinnedPluginList } from '../../../plugin-manager/PinnedPluginListProvider';
 import { useMenuTranslation } from '../../../schema-component/antd/menu/locale';
 import { CurrentUser } from '../../../user';
@@ -56,6 +57,7 @@ export default function WrapperLayout(props) {
   const { render } = useAppSpin();
   const { t } = useMenuTranslation();
   const [current, setCurrent] = useState(null);
+  const layoutContext = useLayoutContext();
 
   const { setTitle: _setTitle } = useDocumentTitle();
   const setTitle = useCallback((title) => _setTitle(t(title)), []);
@@ -126,14 +128,6 @@ export default function WrapperLayout(props) {
   const SchemaIdContext = createContext(null);
   SchemaIdContext.displayName = 'SchemaIdContext';
 
-  const useMenuProps = () => {
-    const defaultSelectedUid = useContext(SchemaIdContext);
-    return {
-      selectedUid: defaultSelectedUid,
-      defaultSelectedUid,
-    };
-  };
-
   const sideMenuRef = useRef(null);
 
   useEffect(() => {
@@ -152,14 +146,6 @@ export default function WrapperLayout(props) {
     }
   }, [data?.data, params.name, sideMenuRef]);
 
-  const schema = useMemo(() => {
-    const s = filterByACL(data?.data, ctx);
-    if (s?.['x-component-props']) {
-      s['x-component-props']['useProps'] = useMenuProps;
-    }
-    return s;
-  }, [data?.data]);
-
   if (loading) {
     return render();
   }
@@ -169,7 +155,6 @@ export default function WrapperLayout(props) {
     sideMenuRef,
     defaultSelectedUid,
     toolsBtn,
-    schema,
     ...props,
   };
 
@@ -179,15 +164,11 @@ export default function WrapperLayout(props) {
         <SchemaComponent
           distributed
           memoized
-          scope={{
-            useMenuProps,
-          }}
           schema={{
             type: 'void',
             name: 'layout',
-            'x-component': 'LayoutTheme',
+            'x-component': layoutContext.layout || 'LayoutTheme',
             'x-component-props': componentProps,
-            'x-use-component-props': 'useMenuProps',
           }}
         />
       </SchemaIdContext.Provider>

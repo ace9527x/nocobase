@@ -9,12 +9,13 @@
 
 import { ISchema, useForm } from '@formily/react';
 import { uid } from '@formily/shared';
-import { Card, message } from 'antd';
+import { Button, Card, Divider, message, Select } from 'antd';
 import cloneDeep from 'lodash/cloneDeep';
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSystemSettings } from '.';
 import { i18n, useAPIClient, useRequest } from '..';
+import { useLayoutContext } from '../layout-provider';
 import locale from '../locale';
 import { SchemaComponent, useActionContext } from '../schema-component';
 
@@ -49,6 +50,7 @@ const useSaveSystemSettingsValues = () => {
   const { mutate, data } = useSystemSettings();
   const api = useAPIClient();
   const { t } = useTranslation();
+
   return {
     async run() {
       await form.submit();
@@ -65,6 +67,7 @@ const useSaveSystemSettingsValues = () => {
         data: values,
       });
       message.success(t('Saved successfully'));
+
       const lang = values.enabledLanguages?.[0] || 'en-US';
       if (values.enabledLanguages.length < 2 && api.auth.getLocale() !== lang) {
         api.auth.setLocale('');
@@ -174,10 +177,45 @@ const schema: ISchema = {
 };
 
 export const SystemSettingsPane = () => {
+  const layoutContext = useLayoutContext();
+
+  const [layout, setLayout] = useState(layoutContext.layout);
+
+  const cb = () => {
+    layoutContext.setLayout(layout);
+  };
+
   return (
     <Card bordered={false}>
+      <div>
+        <h2>切换布局</h2>
+        <Select
+          value={layout}
+          onChange={(value) => {
+            setLayout(value);
+            // layoutContext.setLayout(value);
+          }}
+          options={layoutContext.layoutList.map((item) => ({
+            value: item.x_component,
+            label: item.x_alias,
+          }))}
+        ></Select>
+        <Button
+          onClick={() => {
+            layoutContext.setLayout(layout);
+            window.location.reload();
+          }}
+        >
+          更新布局
+        </Button>
+      </div>
+      <Divider />
       <SchemaComponent
-        scope={{ useSaveSystemSettingsValues, useSystemSettingsValues, useCloseAction }}
+        scope={{
+          useSaveSystemSettingsValues,
+          useSystemSettingsValues,
+          useCloseAction,
+        }}
         schema={schema}
       />
     </Card>

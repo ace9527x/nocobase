@@ -1,12 +1,13 @@
 import { Plugin } from '@nocobase/client';
 import LayoutTheme from './component/layout';
+import LayoutThemeTwo from './component/layoutTwo';
 import { addMenu, layoutMenuItemInitializer } from './initializer';
 import { setting, settingItemMenu, settingRemove } from './settings';
 import './style';
 
 export class PluginLayoutThemeClient extends Plugin {
   async load() {
-    this.app.addComponents({ LayoutTheme });
+    this.app.addComponents({ LayoutTheme, LayoutThemeTwo });
     this.app.schemaInitializerManager.addItem(
       'page:addBlock',
       layoutMenuItemInitializer.name,

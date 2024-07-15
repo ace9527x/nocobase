@@ -1,8 +1,6 @@
-import createGlobalStyle from '.';
+import { createGlobalStyle } from 'antd-style';
 
-createGlobalStyle(
-  'layoutThemeContent',
-  `
+export const LayoutContextStyle = createGlobalStyle`
   .ant-layout-content, .ant-layout-sider {
     margin-top: var(--nb-header-height);
     height: calc(100vh - var(--nb-header-height));
@@ -12,5 +10,4 @@ createGlobalStyle(
   .ant-menu-inline .ant-menu-submenu-title, .ant-menu-inline.ant-menu-root .ant-menu-submenu-title >.ant-menu-title-content, .ant-menu-inline .ant-menu-item, .ant-menu-inline.ant-menu-root .ant-menu-item >.ant-menu-title-content {
     overflow: visible;
   }
-`,
-);
+`;

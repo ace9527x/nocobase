@@ -1,8 +1,6 @@
-import createGlobalStyle from '.';
+import { createGlobalStyle } from 'antd-style';
 
-createGlobalStyle(
-  'layoutThemeHeader',
-  `
+export const LayoutHeaderStyle = createGlobalStyle`
   .ant-layout-header {
     position: fixed;
     top: 0;
@@ -23,5 +21,4 @@ createGlobalStyle(
     color: #fff;
     padding: 0 24px;
   }
-`,
-);
+`;

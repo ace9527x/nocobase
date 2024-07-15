@@ -1,10 +1,12 @@
-import { IWrapperLayoutProps, SchemaComponent, withDynamicSchemaProps } from '@nocobase/client';
-import { Layout } from 'antd';
-import React, { useEffect, useRef } from 'react';
+import { withDynamicSchemaProps } from '@nocobase/client';
+import type { MenuProps } from 'antd';
+import { Layout, Menu } from 'antd';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-
-const LayoutTheme = (props: IWrapperLayoutProps & { children: any }) => {
-  const { toolsBtn, title = 'zebras', schema, onSelect } = props;
+import { LayoutContextStyle, LayoutHeaderStyle } from '../style';
+import { mockMenu, transformUsmMenu } from '../utils';
+const LayoutTheme = (props) => {
+  const { toolsBtn, title = 'zebras', schema, menu = mockMenu } = props;
 
   const params = useParams<any>();
 
@@ -22,8 +24,28 @@ const LayoutTheme = (props: IWrapperLayoutProps & { children: any }) => {
     }
   }, [params.name, sideMenuRef]);
 
+  const siderMenu = useMemo<any>(() => transformUsmMenu(menu), [menu]);
+
+  const [current, setCurrent] = useState<any>();
+
+  const onClick: MenuProps['onClick'] = (e) => {
+    navigate(`/admin/${e.key}`, {
+      state: {
+        name: e.key,
+      },
+    });
+  };
+
+  useEffect(() => {
+    if (params.name) {
+      setCurrent(params.name);
+    }
+  }, [params]);
+
   return (
     <>
+      <LayoutContextStyle />
+      <LayoutHeaderStyle />
       <Layout.Header>
         <div className="tool-header">
           <h3
@@ -44,28 +66,7 @@ const LayoutTheme = (props: IWrapperLayoutProps & { children: any }) => {
         </div>
       </Layout.Header>
       <Layout.Sider width={260} ref={sideMenuRef}>
-        <SchemaComponent
-          scope={{
-            onSelect: (props) => {
-              console.log(props);
-              onSelect(props);
-            },
-          }}
-          schema={{
-            ...schema,
-            type: 'void',
-            'x-component': 'Menu',
-            'x-initializer': 'addMenu',
-            'x-component-props': {
-              defaultSelectedUid: params.name,
-              mode: 'inline',
-              onSelect: '{{onSelect}}',
-              style: {
-                width: 260,
-              },
-            },
-          }}
-        ></SchemaComponent>
+        <Menu onClick={onClick} selectedKeys={[current]} mode="inline" items={siderMenu} />
       </Layout.Sider>
     </>
   );
