@@ -77,6 +77,7 @@ export const HistoryProvider = (props) => {
 
   const clear = () => {
     undoManager.clear();
+    historyList.current = [historyList.current.pop()];
     setCurrent(Math.random());
   };
 
