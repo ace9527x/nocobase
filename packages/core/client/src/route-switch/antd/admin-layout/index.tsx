@@ -35,6 +35,7 @@ import {
 } from '../../../';
 import { Plugin } from '../../../application/Plugin';
 import { useAppSpin } from '../../../application/hooks/useAppSpin';
+import { HistoryProvider } from '../../../history-operation-provider';
 import { LayoutProvider, useLayoutContext } from '../../../layout-provider';
 import { useMenuTranslation } from '../../../schema-component/antd/menu/locale';
 import { Help } from '../../../user/Help';
@@ -487,17 +488,19 @@ export const InternalAdminLayout = () => {
 
 export const AdminProvider = (props) => {
   return (
-    <CurrentAppInfoProvider>
-      <NavigateIfNotSignIn>
-        <RemoteSchemaTemplateManagerProvider>
-          <RemoteCollectionManagerProvider>
-            <VariablesProvider>
-              <ACLRolesCheckProvider>{props.children}</ACLRolesCheckProvider>
-            </VariablesProvider>
-          </RemoteCollectionManagerProvider>
-        </RemoteSchemaTemplateManagerProvider>
-      </NavigateIfNotSignIn>
-    </CurrentAppInfoProvider>
+    <HistoryProvider>
+      <CurrentAppInfoProvider>
+        <NavigateIfNotSignIn>
+          <RemoteSchemaTemplateManagerProvider>
+            <RemoteCollectionManagerProvider>
+              <VariablesProvider>
+                <ACLRolesCheckProvider>{props.children}</ACLRolesCheckProvider>
+              </VariablesProvider>
+            </RemoteCollectionManagerProvider>
+          </RemoteSchemaTemplateManagerProvider>
+        </NavigateIfNotSignIn>
+      </CurrentAppInfoProvider>
+    </HistoryProvider>
   );
 };
 

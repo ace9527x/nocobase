@@ -12,6 +12,7 @@ import { Schema } from '@formily/react';
 import { Spin } from 'antd';
 import React, { useMemo } from 'react';
 import { useRequest } from '../../api-client';
+import { useHistoryContext } from '../../history-operation-provider';
 import { useSchemaComponentContext } from '../hooks';
 import { FormProvider } from './FormProvider';
 import { SchemaComponent } from './SchemaComponent';
@@ -42,19 +43,23 @@ const RequestSchemaComponent: React.FC<RemoteSchemaComponentProps> = (props) => 
     schemaTransform = defaultTransform,
   } = props;
   const { reset } = useSchemaComponentContext();
+  const historyContext = useHistoryContext();
+
   const conf = {
     url: `/uiSchemas:${onlyRenderProperties ? 'getProperties' : 'getJsonSchema'}/${uid}`,
   };
   const form = useMemo(() => createForm(), [uid]);
-  const { data, loading } = useRequest<{
+  const { loading } = useRequest<{
     data: any;
   }>(conf, {
     refreshDeps: [uid],
     onSuccess(data) {
+      historyContext.push(data?.data);
       onSuccess && onSuccess(data);
       reset && reset();
     },
   });
+
   if (loading) {
     return <Spin />;
   }
@@ -64,10 +69,20 @@ const RequestSchemaComponent: React.FC<RemoteSchemaComponentProps> = (props) => 
 
   /** TODO: 插入布局 */
   return noForm ? (
-    <SchemaComponent components={components} scope={scope} schema={schemaTransform(data?.data || {})} />
+    <SchemaComponent
+      components={components}
+      scope={scope}
+      key={historyContext.length}
+      schema={schemaTransform(historyContext.currentSchema || {})}
+    />
   ) : (
     <FormProvider form={form}>
-      <SchemaComponent components={components} scope={scope} schema={schemaTransform(data?.data || {})} />
+      <SchemaComponent
+        components={components}
+        key={historyContext.length}
+        scope={scope}
+        schema={schemaTransform(historyContext.currentSchema || {})}
+      />
     </FormProvider>
   );
 };

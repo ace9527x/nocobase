@@ -74,3 +74,5 @@ export * from './modules/blocks/useParentRecordCommon';
 export { VariablePopupRecordProvider } from './modules/variable/variablesProvider/VariablePopupRecordProvider';
 
 export type { IWrapperLayoutProps } from './route-switch/antd/admin-layout/wrapper-layout';
+
+export * from './history-operation-provider';

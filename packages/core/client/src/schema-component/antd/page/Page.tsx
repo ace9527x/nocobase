@@ -234,6 +234,7 @@ function PageContent(
 
   return !disablePageHeader && enablePageTabs ? (
     fieldSchema.mapProperties((schema) => {
+      console.log(schema, '--> insertAdjacent');
       if (schema.name !== activeKey) return null;
 
       return (

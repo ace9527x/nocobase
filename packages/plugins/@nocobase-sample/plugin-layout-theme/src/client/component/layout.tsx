@@ -24,7 +24,7 @@ function findLabel(siderMenu, searchMenuKeyword) {
 }
 
 const LayoutTheme = (props) => {
-  const { toolsBtn, title = 'zebras', schema, menu = mockMenu } = props;
+  const { toolsBtn, title = 'zebras', schema, menu = mockMenu, historyToolbar } = props;
 
   const params = useParams<any>();
 
@@ -71,6 +71,7 @@ const LayoutTheme = (props) => {
           >
             {title}
           </h3>
+          {historyToolbar && historyToolbar()}
           <div className="tool-btn">
             {Object.keys(toolsBtn || {}).map((key) => {
               const ToolBtn = toolsBtn[key];

@@ -10,6 +10,7 @@
 import { IRecursionFieldProps, ISchemaFieldProps, RecursionField, Schema } from '@formily/react';
 import { useUpdate } from 'ahooks';
 import React, { useContext, useMemo } from 'react';
+import { useHistoryContext } from '../../history-operation-provider';
 import { SchemaComponentContext } from '../context';
 import { SchemaComponentOptions } from './SchemaComponentOptions';
 
@@ -49,6 +50,7 @@ const RecursionSchemaComponent = (props: ISchemaFieldProps & SchemaComponentOnCh
   const ctx = useContext(SchemaComponentContext);
   const s = useMemo(() => toSchema(schema), [schema]);
   const refresh = useUpdate();
+  const historyContext = useHistoryContext();
 
   return (
     <SchemaComponentContext.Provider
@@ -56,6 +58,8 @@ const RecursionSchemaComponent = (props: ISchemaFieldProps & SchemaComponentOnCh
         ...ctx,
         distributed: ctx.distributed == false ? false : distributed,
         refresh: () => {
+          historyContext.push(JSON.parse(JSON.stringify(s.root.toJSON())));
+
           refresh();
           if (ctx.distributed === false || distributed === false) {
             ctx.refresh?.();

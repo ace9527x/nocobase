@@ -176,6 +176,7 @@ export class Designable {
         schemas = schemas.concat(updateColumnSize(removed.parent));
       }
       this.refresh();
+      return;
       if (!current['x-uid']) {
         return;
       }
@@ -208,6 +209,7 @@ export class Designable {
       if (!schema?.['x-uid']) {
         return;
       }
+      return;
       await api.request({
         url: `/uiSchemas:patch`,
         method: 'post',
@@ -219,6 +221,7 @@ export class Designable {
     });
     this.on('batchPatch', async ({ schemas }) => {
       this.refresh();
+      return;
       await api.request({
         url: `/uiSchemas:batchPatch`,
         method: 'post',
@@ -232,6 +235,8 @@ export class Designable {
         schemas = updateColumnSize(removed.parent);
       }
       this.refresh();
+      return;
+
       if (!removed?.['x-uid']) {
         return;
       }
@@ -279,7 +284,7 @@ export class Designable {
       return;
     }
     const [opts, ...others] = args;
-    console.log('ddddd');
+
     return Promise.all(this.events[name].map((fn) => fn.bind(this)({ current: this.current, ...opts }, ...others)));
   }
 
@@ -453,6 +458,7 @@ export class Designable {
         removed = parent;
       }
     }
+
     return this.emit('remove', { removed });
   }
 
