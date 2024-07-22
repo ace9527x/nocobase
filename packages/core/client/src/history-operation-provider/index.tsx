@@ -4,6 +4,7 @@ import UndoManager from 'undo-manager';
 
 interface HistoryInterface {
   history: ISchema[];
+  forceReload: number;
   currentSchema: ISchema;
   length: number;
   hasRedo: boolean;
@@ -17,6 +18,7 @@ interface HistoryInterface {
 const HistoryContext = createContext<HistoryInterface>({
   history: [],
   length: 0,
+  forceReload: 0,
   currentSchema: {},
   hasRedo: false,
   hasUndo: false,
@@ -36,6 +38,7 @@ export const HistoryProvider = (props) => {
   const historyList = useRef([]);
 
   const [current, setCurrent] = React.useState(-1);
+  const [forceReload, reload] = React.useState(-1);
 
   const hasRedo = useMemo(() => {
     return undoManager.hasRedo();
@@ -67,11 +70,13 @@ export const HistoryProvider = (props) => {
 
   const forward = () => {
     undoManager.redo();
+    reload((v) => v + 1);
   };
 
   const back = () => {
     if (historyList.current.length > 1) {
       undoManager.undo();
+      reload((v) => v + 1);
     }
   };
 
@@ -133,6 +138,7 @@ export const HistoryProvider = (props) => {
         history: historyList.current,
         currentSchema,
         length,
+        forceReload,
         hasRedo,
         hasUndo,
         push,
