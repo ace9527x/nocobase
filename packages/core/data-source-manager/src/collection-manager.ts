@@ -1,3 +1,11 @@
+/*
+ * @Author: 肖兴(xiaox) 349560971@qq.com
+ * @Date: 2024-07-02 16:03:17
+ * @LastEditors: 肖兴(xiaox) 349560971@qq.com
+ * @LastEditTime: 2024-07-25 14:16:09
+ * @FilePath: \my-nocobase-app\packages\core\data-source-manager\src\collection-manager.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 /**
  * This file is part of the NocoBase (R) project.
  * Copyright (c) 2020-2024 NocoBase Co., Ltd.

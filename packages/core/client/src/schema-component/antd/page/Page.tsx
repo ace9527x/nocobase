@@ -93,7 +93,7 @@ export const Page = (props) => {
   };
 
   return wrapSSR(
-    <div className={`${componentCls} ${hashId} ${aclStyles.styles}`}>
+    <div className={`${componentCls} ${hashId} ${aclStyles.styles} ${fieldSchema['x-uid']}`}>
       <PageDesigner title={fieldSchema.title || title} />
       <div
         ref={(ref) => {
@@ -234,7 +234,6 @@ function PageContent(
 
   return !disablePageHeader && enablePageTabs ? (
     fieldSchema.mapProperties((schema) => {
-      console.log(schema, '--> insertAdjacent');
       if (schema.name !== activeKey) return null;
 
       return (

@@ -5,8 +5,6 @@ const fs = require('fs');
 const glob = require('fast-glob');
 const path = require('path');
 
-console.log('VERSION: ', packageJson.version);
-
 function getUmiConfig() {
   const { APP_PORT, API_BASE_URL, API_CLIENT_STORAGE_PREFIX, APP_PUBLIC_PATH } = process.env;
   const API_BASE_PATH = process.env.API_BASE_PATH || '/api/';

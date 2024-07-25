@@ -7,12 +7,13 @@
  * For more information, please refer to: https://www.nocobase.com/agreement.
  */
 
-import { IRecursionFieldProps, ISchemaFieldProps, RecursionField, Schema } from '@formily/react';
+import { IRecursionFieldProps, ISchemaFieldProps, RecursionField, Schema, useField, useForm } from '@formily/react';
 import { useUpdate } from 'ahooks';
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useEffect, useMemo } from 'react';
 import { useHistoryContext } from '../../history-operation-provider';
 import { SchemaComponentContext } from '../context';
 import { SchemaComponentOptions } from './SchemaComponentOptions';
+import { useFormSchemaComponentContext } from '../../form-schema-provider';
 
 type SchemaComponentOnChange = {
   onChange?: (s: Schema) => void;
@@ -48,9 +49,25 @@ interface DistributedProps {
 const RecursionSchemaComponent = (props: ISchemaFieldProps & SchemaComponentOnChange & DistributedProps) => {
   const { components, scope, schema, distributed, ...others } = props;
   const ctx = useContext(SchemaComponentContext);
-  const s = useMemo(() => toSchema(schema), [schema]);
   const refresh = useUpdate();
+
+  const s = useMemo(() => {
+    return toSchema(schema);
+  }, [schema]);
+
   const historyContext = useHistoryContext();
+
+  const sc = useFormSchemaComponentContext();
+
+  useEffect(() => {
+    if (s['x-uid']) {
+      sc.set(s['x-uid'], {
+        schema: s,
+        refresh,
+      })
+    }
+  }, [s]);
+
 
   return (
     <SchemaComponentContext.Provider

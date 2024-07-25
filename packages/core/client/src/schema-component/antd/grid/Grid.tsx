@@ -139,6 +139,7 @@ const ColDivider = (props) => {
         el.parentElement.clientWidth
       ).toFixed(2);
 
+
       _.set(prevSchema, 'x-component-props.width', preWidth);
       _.set(nextSchema, 'x-component-props.width', nextWidth);
       dn.emit('batchPatch', {
@@ -160,6 +161,7 @@ const ColDivider = (props) => {
     },
   });
 
+
   return (
     <div
       ref={(el) => {
@@ -168,7 +170,7 @@ const ColDivider = (props) => {
           dividerRef.current = el;
         }
       }}
-      className={cls('nb-col-divider', 'ColDivider')}
+      className={cls('nb-col-divider', 'ColDivider', props.data.schema['x-uid'])}
       style={droppableStyle}
     >
       <div
@@ -228,8 +230,8 @@ const RowDivider = (props) => {
     onDragStart(event) {
       setActive(true);
     },
-    onDragMove(event) {},
-    onDragOver(event) {},
+    onDragMove(event) { },
+    onDragOver(event) { },
     onDragEnd(event) {
       setActive(false);
     },
@@ -239,7 +241,9 @@ const RowDivider = (props) => {
   });
 
   return (
-    <span ref={visible ? setNodeRef : null} className={cls('nb-row-divider', 'RowDivider')} style={droppableStyle} />
+    <>
+      <span ref={visible ? setNodeRef : null} className={cls('nb-row-divider', 'RowDivider', props.data.schema['x-uid'])} style={droppableStyle} />
+    </>
   );
 };
 
@@ -291,6 +295,7 @@ const useRowProperties = () => {
 
 const useColProperties = () => {
   const fieldSchema = useFieldSchema();
+
   return useMemo(() => {
     return fieldSchema.reduceProperties((buf, s) => {
       if (s['x-component'] === 'Grid.Col' && !s['x-hidden']) {
@@ -358,7 +363,7 @@ export const Grid: any = observer(
     return (
       <FilterBlockProvider>
         <GridContext.Provider value={gridContextValue}>
-          <div className={cls('nb-grid-container', styles.wrapper)}>
+          <div className={cls('nb-grid-container', styles.wrapper, fieldSchema['x-uid'])}>
             <div className={cls(`nb-grid ${styles.container}`)} style={{ position: 'relative' }} ref={gridRef}>
               <div className="nb-grid-warp">
                 <DndWrapper dndContext={props.dndContext}>
@@ -531,8 +536,8 @@ Grid.Col = observer(
       onDragStart(event) {
         setActive(true);
       },
-      onDragMove(event) {},
-      onDragOver(event) {},
+      onDragMove(event) { },
+      onDragOver(event) { },
       onDragEnd(event) {
         setActive(false);
       },

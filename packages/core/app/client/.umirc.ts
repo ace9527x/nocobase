@@ -14,7 +14,6 @@ const pluginDirs = (process.env.PLUGIN_PATH || 'packages/plugins/,packages/sampl
   .map((item) => path.join(process.cwd(), item));
 
 const outputPluginPath = path.join(__dirname, 'src', '.plugins');
-console.log('outputPluginPath', outputPluginPath);
 const indexGenerator = new IndexGenerator(outputPluginPath, pluginDirs);
 indexGenerator.generate();
 

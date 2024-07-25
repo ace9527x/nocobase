@@ -35,8 +35,13 @@ export const CollectionFieldInternalField: React.FC = (props: Props) => {
   const fieldSchema = useFieldSchema();
   const collectionField = useCollectionField();
   const { uiSchema: uiSchemaOrigin, defaultValue } = collectionField;
+
+
   const { isAllowToSetDefaultValue } = useIsAllowToSetDefaultValue();
   const uiSchema = useMemo(() => compile(uiSchemaOrigin), [JSON.stringify(uiSchemaOrigin)]);
+
+  // console.log(fieldSchema, field, '----> assss');
+
   const Component = useComponent(
     fieldSchema['x-component-props']?.['component'] || uiSchema?.['x-component'] || 'Input',
   );

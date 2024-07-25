@@ -10,9 +10,9 @@
 import { createForm } from '@formily/core';
 import { FormProvider, Schema } from '@formily/react';
 import { uid } from '@formily/shared';
+import { useUpdate } from 'ahooks';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useUpdate } from 'ahooks';
 import { SchemaComponentContext } from '../context';
 import { ISchemaComponentProvider } from '../types';
 import { SchemaComponentOptions, useSchemaOptionsContext } from './SchemaComponentOptions';
@@ -60,7 +60,6 @@ export const SchemaComponentProvider: React.FC<ISchemaComponentProvider> = (prop
   const [formId, setFormId] = useState(uid());
   const form = useMemo(() => props.form || createForm(), [formId]);
   const { t } = useTranslation();
-
   const scope = useMemo(() => {
     return { ...props.scope, t, randomString };
   }, [props.scope, t, ctxOptions?.scope]);
@@ -83,6 +82,8 @@ export const SchemaComponentProvider: React.FC<ISchemaComponentProvider> = (prop
   const reset = useCallback(() => {
     setFormId(uid());
   }, []);
+
+  console.log(form, '----> form')
 
   return (
     <SchemaComponentContext.Provider

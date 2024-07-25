@@ -9,6 +9,7 @@ interface HistoryInterface {
   length: number;
   hasRedo: boolean;
   hasUndo: boolean;
+  reload: (a) => void;
   push: (operation) => void;
   forward: () => void;
   back: () => void;
@@ -22,10 +23,11 @@ const HistoryContext = createContext<HistoryInterface>({
   currentSchema: {},
   hasRedo: false,
   hasUndo: false,
-  push: () => {},
-  forward: () => {},
-  back: () => {},
-  clear: () => {},
+  push: () => { },
+  forward: () => { },
+  back: () => { },
+  clear: () => { },
+  reload: (a) => { },
 });
 
 const undoManager = new UndoManager();
@@ -37,33 +39,33 @@ export const useHistoryContext = () => {
 export const HistoryProvider = (props) => {
   const historyList = useRef([]);
 
-  const [current, setCurrent] = React.useState(-1);
+  const [undolen, syncUndoLen] = React.useState(-1);
   const [forceReload, reload] = React.useState(-1);
 
   const hasRedo = useMemo(() => {
     return undoManager.hasRedo();
-  }, [current]);
+  }, [undolen]);
 
   const hasUndo = useMemo(() => {
     return historyList.current.length > 1;
-  }, [current]);
+  }, [undolen]);
 
   const length = useMemo(() => {
     return historyList.current.length;
-  }, [current]);
+  }, [undolen]);
 
   const push = (operation) => {
     historyList.current.push(operation);
-    setCurrent(Math.random());
+    syncUndoLen(Math.random());
 
     undoManager.add({
       redo: () => {
         historyList.current.push(operation);
-        setCurrent(Math.random());
+        syncUndoLen(Math.random());
       },
       undo: () => {
         historyList.current.pop();
-        setCurrent(Math.random());
+        syncUndoLen(Math.random());
       },
     });
   };
@@ -83,12 +85,12 @@ export const HistoryProvider = (props) => {
   const clear = () => {
     undoManager.clear();
     historyList.current = [historyList.current.pop()];
-    setCurrent(Math.random());
+    syncUndoLen(Math.random());
   };
 
   const currentSchema = useMemo(() => {
     return historyList?.current?.[historyList?.current.length - 1] || {};
-  }, [current]);
+  }, [undolen]);
 
   const historyBack = (e) => {
     if (e.ctrlKey && e.key === 'z') {
@@ -139,6 +141,7 @@ export const HistoryProvider = (props) => {
         currentSchema,
         length,
         forceReload,
+        reload,
         hasRedo,
         hasUndo,
         push,

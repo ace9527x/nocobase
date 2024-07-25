@@ -8,7 +8,7 @@
  */
 
 import { useFieldSchema } from '@formily/react';
-import { Skeleton, CardProps } from 'antd';
+import { CardProps, Skeleton } from 'antd';
 import React, { FC } from 'react';
 import { IntersectionOptions, useInView } from 'react-intersection-observer';
 import { useSchemaTemplate } from '../../../schema-templates';
@@ -48,7 +48,7 @@ export const CardItem: FC<CardItemProps> = (props) => {
   if (templateKey && !template) return null;
   return wrapSSR(
     <BlockItemError>
-      <BlockItem name={name} className={`${componentCls} ${hashId} noco-card-item`}>
+      <BlockItem name={name} className={`${componentCls} ${hashId} ${fieldSchema['x-uid']} noco-card-item`}>
         <BlockItemCard ref={ref} {...restProps}>
           {inView ? props.children : lazyRenderElement ?? <Skeleton paragraph={{ rows: 4 }} />}
         </BlockItemCard>

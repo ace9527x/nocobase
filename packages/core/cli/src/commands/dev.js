@@ -52,22 +52,24 @@ module.exports = (cli) => {
       const { APP_PORT } = process.env;
 
       let clientPort = APP_PORT;
-      let serverPort;
+      let serverPort = clientPort * 1 + 1;
 
       /** 如果没有ts转换 退出进程 */
       nodeCheck();
 
       /** 端口被占用退出进程 */
-      await postCheck(opts);
+      await postCheck({
+        ...opts,
+        port: server ? serverPort : clientPort,
+      });
 
       /** 服务端端口默认为客户端端口 + 1 */
-      if (server) {
-        serverPort = APP_PORT;
-      } else if (!server && !client) {
-        serverPort = await getPortPromise({
-          port: 1 * clientPort + 1,
-        });
-      }
+      // if (!server && !client) {
+      //   serverPort = await getPortPromise({
+      //     port: 1 * clientPort + 1,
+      //   });
+      // }
+
 
       /**
        * yarn dev --port 3000
@@ -86,7 +88,7 @@ module.exports = (cli) => {
 
       // process.exit(1);
 
-      if (server || !client) {
+      if (server) {
         console.log('starting server', serverPort);
 
         const filteredArgs = process.argv.filter(
@@ -129,7 +131,7 @@ module.exports = (cli) => {
         runDevServer();
       }
 
-      if (client || !server) {
+      if (!server) {
         console.log('starting client', 1 * clientPort);
         run('umi', ['dev'], {
           env: {

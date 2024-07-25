@@ -40,7 +40,9 @@ import { LayoutProvider, useLayoutContext } from '../../../layout-provider';
 import { useMenuTranslation } from '../../../schema-component/antd/menu/locale';
 import { Help } from '../../../user/Help';
 import { VariablesProvider } from '../../../variables';
+import ComponentTree from './component-tree';
 import WrapperLayout from './wrapper-layout';
+import { FormSchemaComponentProvider } from '../../../form-schema-provider';
 
 const filterByACL = (schema, options) => {
   const { allowAll, allowMenuItemIds = [] } = options;
@@ -236,32 +238,32 @@ const GlobalStyleForAdminLayout = createGlobalStyle`
     .ant-menu.ant-menu-submenu.ant-menu-submenu-popup {
       .ant-menu.ant-menu-sub.ant-menu-vertical {
         background-color: ${(p) => {
-          // @ts-ignore
-          return p.theme.colorBgHeader + ' !important';
-        }};
+    // @ts-ignore
+    return p.theme.colorBgHeader + ' !important';
+  }};
         color: ${(p) => {
-          // @ts-ignore
-          return p.theme.colorTextHeaderMenu + ' !important';
-        }};
+    // @ts-ignore
+    return p.theme.colorTextHeaderMenu + ' !important';
+  }};
         .ant-menu-item:hover {
           color: ${(p) => {
-            // @ts-ignore
-            return p.theme.colorTextHeaderMenuHover + ' !important';
-          }};
+    // @ts-ignore
+    return p.theme.colorTextHeaderMenuHover + ' !important';
+  }};
           background-color: ${(p) => {
-            // @ts-ignore
-            return p.theme.colorBgHeaderMenuHover + ' !important';
-          }};
+    // @ts-ignore
+    return p.theme.colorBgHeaderMenuHover + ' !important';
+  }};
         }
         .ant-menu-item.ant-menu-item-selected {
           color: ${(p) => {
-            // @ts-ignore
-            return p.theme.colorTextHeaderMenuActive + ' !important';
-          }};
+    // @ts-ignore
+    return p.theme.colorTextHeaderMenuActive + ' !important';
+  }};
           background-color: ${(p) => {
-            // @ts-ignore
-            return p.theme.colorBgHeaderMenuActive + ' !important';
-          }};
+    // @ts-ignore
+    return p.theme.colorBgHeaderMenuActive + ' !important';
+  }};
         }
       }
     }
@@ -488,19 +490,21 @@ export const InternalAdminLayout = () => {
 
 export const AdminProvider = (props) => {
   return (
-    <HistoryProvider>
-      <CurrentAppInfoProvider>
-        <NavigateIfNotSignIn>
-          <RemoteSchemaTemplateManagerProvider>
-            <RemoteCollectionManagerProvider>
-              <VariablesProvider>
-                <ACLRolesCheckProvider>{props.children}</ACLRolesCheckProvider>
-              </VariablesProvider>
-            </RemoteCollectionManagerProvider>
-          </RemoteSchemaTemplateManagerProvider>
-        </NavigateIfNotSignIn>
-      </CurrentAppInfoProvider>
-    </HistoryProvider>
+    <FormSchemaComponentProvider>
+      <HistoryProvider>
+        <CurrentAppInfoProvider>
+          <NavigateIfNotSignIn>
+            <RemoteSchemaTemplateManagerProvider>
+              <RemoteCollectionManagerProvider>
+                <VariablesProvider>
+                  <ACLRolesCheckProvider>{props.children}</ACLRolesCheckProvider>
+                </VariablesProvider>
+              </RemoteCollectionManagerProvider>
+            </RemoteSchemaTemplateManagerProvider>
+          </NavigateIfNotSignIn>
+        </CurrentAppInfoProvider>
+      </HistoryProvider>
+    </FormSchemaComponentProvider>
   );
 };
 
@@ -510,6 +514,7 @@ export const AdminLayout = (props) => {
   return (
     <AdminProvider>
       <LayoutProvider>
+        <ComponentTree />
         {/* <InternalAdminLayout {...props} /> */}
         <Layout>
           <WrapperLayout key={layoutContext.layout}></WrapperLayout>

@@ -22,6 +22,9 @@ const WithForm = (props) => {
   const expressionScope = useContext(SchemaExpressionScopeContext);
   const scope = { ...options?.scope, ...expressionScope };
   const components = { ...options?.components };
+
+  console.log(form, '---> form');
+
   return (
     <FormilyFormProvider {...others} form={form}>
       <SchemaComponentOptions components={components} scope={scope}>
