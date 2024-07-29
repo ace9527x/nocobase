@@ -18,6 +18,7 @@ import { SchemaInitializerOptions } from '../types';
 import { SchemaInitializer } from '../SchemaInitializer';
 import { useFieldSchema, useForm } from '@formily/react';
 import { useFormSchemaComponentContext } from '../../../form-schema-provider';
+import { mountAttr } from '../../utils';
 
 const InitializerComponent: FC<SchemaInitializerOptions<any, any>> = React.memo((options) => {
   const Component: any = options.Component || SchemaInitializerButton;
@@ -46,7 +47,7 @@ const InitializerComponent: FC<SchemaInitializerOptions<any, any>> = React.memo(
 
   if (!xuid) return null;
 
-  return createPortal(React.createElement(C, options, React.createElement(ItemsComponent, itemsComponentProps)), document.querySelector(`#${fieldSchema?.['x-uid']}`));
+  return mountAttr(fieldSchema?.['x-uid'], React.createElement(C, options, React.createElement(ItemsComponent, itemsComponentProps)));
 });
 InitializerComponent.displayName = 'InitializerComponent';
 

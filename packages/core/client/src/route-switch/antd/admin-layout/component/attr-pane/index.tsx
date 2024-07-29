@@ -30,7 +30,7 @@ const AttrPane = (props) => {
   return (
     <>
       <ComponentStyle />
-      <div id={checkUid} className={`nocobase_attr-pane ${attrVisible ? 'visible' : ''}`} onMouseMove={(e) => {
+      <div id={`attr-${checkUid}`} className={`nocobase_attr-pane ${attrVisible ? 'visible' : ''}`} onMouseMove={(e) => {
         e.stopPropagation();
         e.preventDefault();
       }}>

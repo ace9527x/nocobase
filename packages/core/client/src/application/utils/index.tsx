@@ -9,6 +9,7 @@
 
 import React, { ComponentType, FC } from 'react';
 import { BlankComponent } from '../components';
+import { createPortal } from 'react-dom';
 
 export function normalizeContainer(container: Element | ShadowRoot | string): Element | null {
   if (!container) {
@@ -46,3 +47,7 @@ export const compose = (...components: [ComponentType, any][]) => {
       return <Component>{LastChild && <LastChild {...props} />}</Component>;
     }) as FC;
 };
+
+export const mountAttr = (xuid: string, comp: React.ReactNode) => {
+  return createPortal(comp, document.getElementById(`attr-${xuid}`))
+}

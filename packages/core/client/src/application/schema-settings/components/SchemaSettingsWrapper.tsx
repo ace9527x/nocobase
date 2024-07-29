@@ -17,6 +17,7 @@ import { useDesignable } from '../../../schema-component';
 import { useField, useFieldSchema } from '@formily/react';
 import { useFormSchemaComponentContext } from '../../../form-schema-provider';
 import { createPortal } from 'react-dom';
+import { mountAttr } from '../../utils';
 
 /**
  * @internal
@@ -60,5 +61,5 @@ export const SchemaSettingsWrapper: FC<SchemaSettingOptions<any>> = (props) => {
     </SchemaSettingsDropdown>
   );
 
-  return createPortal(C, document.querySelector(`#${fieldSchema?.['x-uid']}`));
+  return mountAttr(fieldSchema?.['x-uid'], C);
 };
