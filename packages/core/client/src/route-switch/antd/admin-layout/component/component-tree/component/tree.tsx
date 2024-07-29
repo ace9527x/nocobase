@@ -11,11 +11,13 @@ import { Tree } from 'antd';
 import _ from 'lodash';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistoryContext } from '../../../../../history-operation-provider';
-import { moveSchema } from '../../../../../history-operation-provider/utils';
+import { useHistoryContext } from '../../../../../../history-operation-provider';
+import { moveSchema } from '../../../../../../history-operation-provider/utils';
+import { useFormSchemaComponentContext } from '../../../../../../form-schema-provider';
 
 export const CTree: React.FC = () => {
   const historyContext = useHistoryContext();
+  const formSchemaContext = useFormSchemaComponentContext();
 
   const { t } = useTranslation();
 
@@ -108,17 +110,19 @@ export const CTree: React.FC = () => {
       fieldNames={{
         title: '_title',
         key: 'x-uid',
-        children: 'properties'
+        children: 'properties',
       }}
       titleRender={(node) => {
-        return <div
-          onMouseLeave={(e) => {
-            const style = document.head.querySelector('style[name="tree-hover"]')
-            if (style) style.innerHTML = '';
-          }}
-          onMouseEnter={(e) => {
-            const style = document.head.querySelector('style[name="tree-hover"]')
-            if (style) style.innerHTML = `[class*="${node['x-uid']}"]::before {
+        return (
+          <div
+            onMouseLeave={(e) => {
+              const style = document.head.querySelector('style[name="tree-hover"]');
+              if (style) style.innerHTML = '';
+            }}
+            onMouseEnter={(e) => {
+              const style = document.head.querySelector('style[name="tree-hover"]');
+              if (style)
+                style.innerHTML = `[class*="${node['x-uid']}"]::before {
               content: '';
               position: absolute;
               inset: 0;
@@ -126,15 +130,23 @@ export const CTree: React.FC = () => {
               border: 2px solid #ff9c4699;
               border-radius: 4px;
             }`;
-          }}>
-          {node._title}
-        </div>
+            }}
+          >
+            {node._title}
+          </div>
+        );
       }}
       draggable
       blockNode
+      selectedKeys={[formSchemaContext?.checkUid]}
       onDrop={onDrop}
       onExpand={(expands) => {
-        setExpandedKeys(expands)
+        setExpandedKeys(expands);
+      }}
+      onSelect={(keys, info) => {
+        const [key] = keys;
+
+        formSchemaContext.openAttrPane(key as string);
       }}
       expandedKeys={expandedKeys}
       treeData={data?.properties}

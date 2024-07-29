@@ -19,6 +19,10 @@ interface IFormSchemaComponentContext {
   set: (key: string, val: FormSchema) => void;
   get: (key: string) => FormSchema;
   clear: () => void;
+  attrVisible: boolean;
+  checkUid: string;
+  openAttrPane: (key: string) => void;
+  cancelAttrPane: () => void;
 }
 
 const FormSchemaComponentContext = createContext<IFormSchemaComponentContext>({
@@ -26,7 +30,11 @@ const FormSchemaComponentContext = createContext<IFormSchemaComponentContext>({
   set: () => { },
   // @ts-ignore
   get: () => { },
-  clear: () => { }
+  clear: () => { },
+  checkUid: '',
+  attrVisible: false,
+  openAttrPane: () => { },
+  cancelAttrPane: () => { }
 });
 
 export const useFormSchemaComponentContext = () => {
@@ -35,6 +43,8 @@ export const useFormSchemaComponentContext = () => {
 
 export const FormSchemaComponentProvider = (props) => {
   const schemaList = useRef({});
+  const [attrVisible, setAttrVisible] = useState(false);
+  const [checkUid, setCheckUid] = useState('');
 
   const clear = () => {
     schemaList.current = {};
@@ -50,14 +60,25 @@ export const FormSchemaComponentProvider = (props) => {
     return schemaList.current[key];
   }
 
-  console.log(schemaList);
+  const cancelAttrPane = () => {
+    setAttrVisible(false)
+  }
+
+  const openAttrPane = (key: string) => {
+    setCheckUid(key)
+    setAttrVisible(true)
+  }
 
   return (
     <FormSchemaComponentContext.Provider value={{
       schemaList: schemaList.current,
       set: setSchemaList,
       get: getSchemaUid,
-      clear: clear
+      clear: clear,
+      checkUid,
+      attrVisible,
+      openAttrPane: openAttrPane,
+      cancelAttrPane: cancelAttrPane,
     }}>
       {props.children}
     </FormSchemaComponentContext.Provider>

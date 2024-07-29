@@ -23,7 +23,6 @@ const ComponentStyle = createGlobalStyle`
     z-index: 99;
     transition: width 0.1s, box-shadow 0.5s;
     overflow: hidden;
-    border-radius: 0 12px 12px 0;
     background: #fff;
   }
 

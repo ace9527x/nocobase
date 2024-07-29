@@ -7,7 +7,7 @@
  * For more information, please refer to: https://www.nocobase.com/agreement.
  */
 
-import { FC, useMemo } from 'react';
+import { FC, useLayoutEffect, useMemo, useState } from 'react';
 import { SchemaSettingsDropdown } from '../../../schema-settings';
 import { SchemaSettingOptions } from '../types';
 import { SchemaSettingsChildren } from './SchemaSettingsChildren';
@@ -15,6 +15,8 @@ import { SchemaSettingsIcon } from './SchemaSettingsIcon';
 import React from 'react';
 import { useDesignable } from '../../../schema-component';
 import { useField, useFieldSchema } from '@formily/react';
+import { useFormSchemaComponentContext } from '../../../form-schema-provider';
+import { createPortal } from 'react-dom';
 
 /**
  * @internal
@@ -24,6 +26,17 @@ export const SchemaSettingsWrapper: FC<SchemaSettingOptions<any>> = (props) => {
   const { dn } = useDesignable();
   const field = useField();
   const fieldSchema = useFieldSchema();
+
+  const { checkUid } = useFormSchemaComponentContext();
+
+  const [curr, setCurr] = useState(checkUid);
+
+  const xuid = useMemo(() => document.querySelector(`#${fieldSchema?.['x-uid']}`), [curr]);
+
+  useLayoutEffect(() => {
+    setCurr(checkUid);
+  }, [checkUid])
+
   const cProps = useMemo(
     () => ({
       options: props,
@@ -32,7 +45,10 @@ export const SchemaSettingsWrapper: FC<SchemaSettingOptions<any>> = (props) => {
     }),
     [componentProps, props, style],
   );
-  return (
+
+  if (!xuid) return null;
+
+  const C = (
     <SchemaSettingsDropdown
       title={React.createElement(Component, cProps)}
       dn={dn}
@@ -43,4 +59,6 @@ export const SchemaSettingsWrapper: FC<SchemaSettingOptions<any>> = (props) => {
       <SchemaSettingsChildren>{items}</SchemaSettingsChildren>
     </SchemaSettingsDropdown>
   );
+
+  return createPortal(C, document.querySelector(`#${fieldSchema?.['x-uid']}`));
 };

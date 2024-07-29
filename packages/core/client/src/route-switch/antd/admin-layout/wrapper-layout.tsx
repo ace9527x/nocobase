@@ -1,5 +1,5 @@
 import { ReactFC } from '@formily/react';
-import React, { createContext, useCallback, useEffect, useRef, useState } from 'react';
+import React, { createContext, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useMatch, useNavigate, useParams } from 'react-router-dom';
 import { findByUid, findMenuItem, SchemaComponent, useACLRoleContext, useDocumentTitle, useRequest } from '../../../';
 import { useAppSpin } from '../../../application/hooks/useAppSpin';
@@ -154,6 +154,7 @@ export default function WrapperLayout(props) {
       navigate('/');
     }
   }, [layoutContext.layout]);
+
 
   if (loading) {
     return render();

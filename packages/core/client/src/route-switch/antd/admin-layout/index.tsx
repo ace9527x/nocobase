@@ -40,9 +40,10 @@ import { LayoutProvider, useLayoutContext } from '../../../layout-provider';
 import { useMenuTranslation } from '../../../schema-component/antd/menu/locale';
 import { Help } from '../../../user/Help';
 import { VariablesProvider } from '../../../variables';
-import ComponentTree from './component-tree';
+import ComponentTree from './component/component-tree';
 import WrapperLayout from './wrapper-layout';
 import { FormSchemaComponentProvider } from '../../../form-schema-provider';
+import AttrPane from './component/attr-pane';
 
 const filterByACL = (schema, options) => {
   const { allowAll, allowMenuItemIds = [] } = options;
@@ -514,6 +515,7 @@ export const AdminLayout = (props) => {
   return (
     <AdminProvider>
       <LayoutProvider>
+        <AttrPane />
         <ComponentTree />
         {/* <InternalAdminLayout {...props} /> */}
         <Layout>

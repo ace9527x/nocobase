@@ -8,16 +8,31 @@
  */
 
 import { ButtonProps } from 'antd';
-import React, { FC, useMemo } from 'react';
+import React, { FC, useLayoutEffect, useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useApp } from '../../hooks';
 import { SchemaInitializerItems } from '../components';
 import { SchemaInitializerButton } from '../components/SchemaInitializerButton';
 import { withInitializer } from '../withInitializer';
 import { SchemaInitializerOptions } from '../types';
 import { SchemaInitializer } from '../SchemaInitializer';
+import { useFieldSchema, useForm } from '@formily/react';
+import { useFormSchemaComponentContext } from '../../../form-schema-provider';
 
 const InitializerComponent: FC<SchemaInitializerOptions<any, any>> = React.memo((options) => {
   const Component: any = options.Component || SchemaInitializerButton;
+
+  const fieldSchema = useFieldSchema();
+
+  const { checkUid } = useFormSchemaComponentContext();
+
+  const [curr, setCurr] = useState(checkUid);
+
+  const xuid = useMemo(() => document.querySelector(`#${fieldSchema?.['x-uid']}`), [curr]);
+
+  useLayoutEffect(() => {
+    setCurr(checkUid);
+  }, [checkUid])
 
   const ItemsComponent: any = options.ItemsComponent || SchemaInitializerItems;
   const itemsComponentProps: any = {
@@ -29,7 +44,9 @@ const InitializerComponent: FC<SchemaInitializerOptions<any, any>> = React.memo(
 
   const C = useMemo(() => withInitializer(Component), [Component]);
 
-  return React.createElement(C, options, React.createElement(ItemsComponent, itemsComponentProps));
+  if (!xuid) return null;
+
+  return createPortal(React.createElement(C, options, React.createElement(ItemsComponent, itemsComponentProps)), document.querySelector(`#${fieldSchema?.['x-uid']}`));
 });
 InitializerComponent.displayName = 'InitializerComponent';
 
@@ -38,6 +55,7 @@ export function useSchemaInitializerRender<P1 = ButtonProps, P2 = {}>(
   options?: Omit<SchemaInitializerOptions<P1, P2>, 'name'>,
 ) {
   const app = useApp();
+
   const initializer = useMemo(
     () => (typeof name === 'object' ? name : app.schemaInitializerManager.get<P1, P2>(name)),
     [app.schemaInitializerManager, name],
@@ -57,6 +75,7 @@ export function useSchemaInitializerRender<P1 = ButtonProps, P2 = {}>(
         render: () => null,
       };
     }
+    
     return {
       exists: true,
       render: (props?: Omit<SchemaInitializerOptions<P1, P2>, 'name'>) => {
@@ -64,7 +83,7 @@ export function useSchemaInitializerRender<P1 = ButtonProps, P2 = {}>(
           ...initializer.options,
           ...options,
           ...props,
-        });
+        })
       },
     };
   }, [initializer, name, options]);
